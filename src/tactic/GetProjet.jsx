@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 
 const GetProjet = () => {
   const [scores, setScores] = useState(null);
-
+  const [selectedView, setSelectedView] = useState('progressBar');
   useEffect(() => {
     fetch('http://127.0.0.1:8000/api/get-scores', {
       method: 'POST',
@@ -17,7 +17,7 @@ const GetProjet = () => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        url: 'https://www.linkedin.com/'
+        url: 'https://moubader.tn/'
       })
     })
       .then(response => response.json())
@@ -25,28 +25,90 @@ const GetProjet = () => {
         console.log(data);
         setScores(data)});
   }, []);
+  const handleViewSelection = (view) => {
+    setSelectedView(view);
+  };
 
   return (
     <div>
       <DashboardLayout>
         <DashboardNavbar />
-        {scores ? (
+        <ul style={{ display: 'flex', listStyle: 'none', padding: 0, backgroundColor: '#f3f3f3', borderRadius: '4px' }}>
+      <li
+        style={{
+          marginRight: '2px',
+          padding: '10px',
+          backgroundColor: selectedView === 'progressBar' ? '#3c53e7' : '#f3f3f3',
+          color: selectedView === 'progressBar' ? 'white' : 'initial',
+          fontWeight: 'bold',
+          borderRadius: '4px',
+          cursor: 'pointer',
+        }}
+        onClick={() => handleViewSelection('progressBar')}
+      >
+        Progress Bar
+      </li>
+      <li
+        style={{
+          marginRight: '2px',
+          padding: '10px',
+          backgroundColor: selectedView === 'firstTable' ? '#3c53e7' : '#f3f3f3',
+          color: selectedView === 'firstTable' ? 'white' : 'initial',
+          fontWeight: 'bold',
+          borderRadius: '4px',
+          cursor: 'pointer',
+        }}
+        onClick={() => handleViewSelection('firstTable')}
+      >
+        First Table
+      </li>
+      <li
+        style={{
+          marginRight: '2px',
+          padding: '10px',
+          backgroundColor: selectedView === 'secondTable' ? '#3c53e7' : '#f3f3f3',
+          color: selectedView === 'secondTable' ? 'white' : 'initial',
+          fontWeight: 'bold',
+          borderRadius: '4px',
+          cursor: 'pointer',
+        }}
+        onClick={() => handleViewSelection('secondTable')}
+      >
+        Second Table
+      </li>
+      <li
+        style={{
+          marginRight: '2px',
+          padding: '10px',
+          backgroundColor: selectedView === 'thirdTable' ? '#3c53e7' : '#f3f3f3',
+          color: selectedView === 'thirdTable' ? 'white' : 'initial',
+          fontWeight: 'bold',
+          borderRadius: '4px',
+          cursor: 'pointer',
+        }}
+        onClick={() => handleViewSelection('thirdTable')}
+      >
+        Third Table
+      </li>
+    </ul>
+
+        {selectedView === 'progressBar' && scores && (
           <div>
-           <div className="score-item" style={{display: 'flex', justifyContent: 'center', marginTop: '10px', width: 350, height: 300 }}>
-             <p>Performance score:</p>
-             <CircularProgressbar
-              value={scores.html_analysis_results.performance_scoress}
-              text={`${scores.html_analysis_results.performance_scoress}%`}
-              styles={buildStyles({
-                textSize: '12px',
-                pathColor:`rgba(62, 152, 199, ${scores.html_analysis_results.performance_scoress / 100})`,
-                textColor: '#f88',
-                trailColor: '#d6d6d6',
-                strokeLinecap: 'round',
-                strokeWidth: 8
-                })}
-                 />
-             </div>
+            <div className="score-item" style={{ display: 'flex', justifyContent: 'center', marginTop: '10px', width: 350, height: 300 }}>
+          <p>Performance score:</p>
+          <CircularProgressbar
+            value={scores.html_analysis_results.performance_scoress}
+            text={`${scores.html_analysis_results.performance_scoress}%`}
+            styles={buildStyles({
+              textSize: '12px',
+              pathColor: `rgba(62, 152, 199, ${scores.html_analysis_results.performance_scoress / 100})`,
+              textColor: '#f88',
+              trailColor: '#d6d6d6',
+              strokeLinecap: 'round',
+              strokeWidth: 8
+            })}
+          />
+        </div>
             <div className="score-item" style={{display: 'flex', justifyContent: 'center', marginTop: '10px' , width: 350, height: 300 }}>
               <p>Accessibility score:</p>
               <CircularProgressbar
@@ -107,7 +169,11 @@ const GetProjet = () => {
                 })}
               />
             </div>
+            </div>
+            )}
             <br/>
+            {selectedView === 'firstTable' && scores && (
+              <div>
             <table style={{ border: '1px solid black' }}>
               <tr>
                 <th style={{ border: '1px solid black', padding: '8px' }}>Lcp Metric</th>
@@ -117,13 +183,17 @@ const GetProjet = () => {
                 <th style={{ border: '1px solid black', padding: '8px' }}>Fcp Metric</th>
               </tr>
               <tr>
-                <td style={{ border: '1px solid black', padding: '8px' }}>{scores.html_analysis_results.lcp_metric}</td>
-                <td style={{ border: '1px solid black', padding: '8px' }}>{scores.html_analysis_results.cls_metric}</td>
-                <td style={{ border: '1px solid black', padding: '8px' }}>{scores.html_analysis_results.fcp_metric}</td>
-                <td style={{ border: '1px solid black', padding: '8px' }}>{scores.html_analysis_results.inp_metric}</td>
-                <td style={{ border: '1px solid black', padding: '8px' }}>{scores.html_analysis_results.ttfb_metric}</td>
-              </tr>
+                <td style={{ border: '1px solid black', padding: '8px' }}>{scores?.html_analysis_results?.lcp_metric}</td>
+                <td style={{ border: '1px solid black', padding: '8px' }}>{scores?.html_analysis_results?.cls_metric}</td>
+                <td style={{ border: '1px solid black', padding: '8px' }}>{scores?.html_analysis_results?.fcp_metric}</td>
+                <td style={{ border: '1px solid black', padding: '8px' }}>{scores?.html_analysis_results?.inp_metric}</td>
+                <td style={{ border: '1px solid black', padding: '8px' }}>{scores?.html_analysis_results?.ttfb_metric}</td>
+             </tr>
             </table>
+            </div>
+            )}
+            {selectedView === 'secondTable' && scores &&  (
+              <div>
             <table style={{ border: '1px solid black' }}>
               <thead>
                 <tr>
@@ -145,6 +215,9 @@ const GetProjet = () => {
                 })}
               </tbody>
             </table>
+            </div>)}
+            {selectedView === 'thirdTable' && scores &&  (
+              <div>
             <table style={{ border: '1px solid black' }}>
              <thead>
             <tr>
@@ -171,10 +244,7 @@ const GetProjet = () => {
           </tr>
          </tbody>
         </table>
-
-          </div>
-        ) : (
-          <p>Loading...</p>
+        </div>
         )}
       </DashboardLayout>
     </div>
