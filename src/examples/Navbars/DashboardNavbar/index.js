@@ -64,7 +64,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator } = controller;
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
-
+  const isLoggedIn = !!localStorage.getItem('token');
   useEffect(() => {
     // Setting the navbar type
     if (fixedNavbar) {
@@ -154,6 +154,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
               />
             </SoftBox>
             <SoftBox color={light ? "white" : "inherit"}>
+            {!isLoggedIn ? (
               <Link to="/authentication/sign-in">
                 <IconButton sx={navbarIconButton} size="small">
                   <Icon
@@ -171,7 +172,25 @@ function DashboardNavbar({ absolute, light, isMini }) {
                     Sign in
                   </SoftTypography>
                 </IconButton>
-              </Link>
+              </Link> ) : (
+                // Other components to show when the user is logged in
+                <IconButton sx={navbarIconButton} size="small">
+                <Icon
+                  sx={({ palette: { dark, white } }) => ({
+                    color: light ? white.main : dark.main,
+                  })}
+                >
+                  account_circle
+                </Icon>
+                <SoftTypography
+                  variant="button"
+                  fontWeight="medium"
+                  color={light ? "white" : "dark"}
+                >
+                  Sign out
+                </SoftTypography>
+              </IconButton>
+              )}
               <IconButton
                 size="small"
                 color="inherit"

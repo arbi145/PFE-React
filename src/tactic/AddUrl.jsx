@@ -3,9 +3,11 @@ import React, { useState } from 'react';
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import './file.css'
+import useAuth from './useAuth';
 
 const AddUrl = () => {
     const [values, setValues] = useState({ url: '', value1: '', value2: '', value3: '', value4: '' });
+    const { isUserAuthenticated, checkAuthentication } = useAuth();
 
     const handleChange = (event) => {
       const name = event.target.name;
@@ -27,6 +29,9 @@ const AddUrl = () => {
       console.log(data.output);
       console.log('Request data sent to Laravel:', JSON.stringify(values));
     };
+    if (!checkAuthentication()) {
+      return null; // Return null to prevent rendering this component
+    }
 
 
   return (

@@ -17,8 +17,8 @@ const SecondTableSection = ({ scores }) => {
             if (key.startsWith('Page ')) {
               return (
                 <tr key={key}>
-                  <td style={{ border: '1px solid black', padding: '8px' }}>{value.href}</td>
-                  <td style={{ border: '1px solid black', padding: '8px' }}>{value.response_time}</td>
+                  <td style={{ border: '1px solid black', padding: '5px' }}>{value.href}</td>
+                  <td style={{ border: '1px solid black', padding: '5px' }}>{parseFloat(value.response_time).toFixed(2)}</td>
                 </tr>
               );
             }

@@ -9,10 +9,21 @@ import PDFGeneratorButton from './PDFGeneratorButton';
 import ThirdTableSection from './Tactic/ThirdTableSection';
 import SecondTableSection from './Tactic/SecondTableSection';
 import FirstTableSection from './Tactic/FirstTableSection';
+import { useNavigate } from 'react-router-dom'; // Import useHistory
+
 const GetProjet = () => {
   const [scores, setScores] = useState(null);
   const [selectedView, setSelectedView] = useState('progressBar');
   const [urlInput, setUrlInput] = useState('');
+  const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
+  const navigate = useNavigate();
+  const [checkboxChecked, setCheckboxChecked] = useState(false);
+
+  
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsUserAuthenticated(!!token); // Set true if token exists, false otherwise
+  }, []);
   const handleSubmit = () => {
     fetch('http://127.0.0.1:8000/api/get-scores', {
       method: 'POST',
@@ -20,7 +31,9 @@ const GetProjet = () => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        url: urlInput
+        url: urlInput,
+        run_functions: checkboxChecked // Send checkbox value to the backend
+    
       })
     })
       .then(response => response.json())
@@ -29,6 +42,11 @@ const GetProjet = () => {
         setScores(data)
       });
   };
+
+  const handleCheckboxChange = (e) => {
+    setCheckboxChecked(e.target.checked);
+  };
+
   const handleViewSelection = (view) => {
     setSelectedView(view);
   };
@@ -36,6 +54,10 @@ const GetProjet = () => {
     setUrlInput(e.target.value);
   }
 
+  if (!isUserAuthenticated) {
+    navigate('/authentication/sign-in'); // Redirect to login page
+    return null; // Return null to prevent rendering this component
+  }
 
   return (
     <div>
@@ -48,6 +70,14 @@ const GetProjet = () => {
         onChange={handleUrlChange} placeholder="Enter URL" 
         style={{ marginRight: '10px', padding: '5px' }}
       />
+      <label>
+            <input
+              type="checkbox"
+              checked={checkboxChecked}
+              onChange={handleCheckboxChange}
+            />
+            Run Functions
+          </label>
       <button onClick={handleSubmit}>Send Request</button>
 
 

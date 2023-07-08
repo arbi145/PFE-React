@@ -32,12 +32,28 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 
 // Images
 import curved9 from "assets/images/curved-images/curved-6.jpg";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function SignIn() {
   const [rememberMe, setRememberMe] = useState(true);
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const history = useNavigate();
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/api/login', { email, password });
+      localStorage.setItem('token', response.data.token);
+      console.log(response.data.token);
+      history('/dashboard');
+    } catch (error) {
+      console.error(error);
+    }}
   return (
     <CoverLayout
       title="Welcome back"
@@ -45,13 +61,15 @@ function SignIn() {
       image={curved9}
     >
       <SoftBox component="form" role="form">
+        <form onSubmit={handleSubmit}>
         <SoftBox mb={2}>
           <SoftBox mb={1} ml={0.5}>
             <SoftTypography component="label" variant="caption" fontWeight="bold">
               Email
             </SoftTypography>
           </SoftBox>
-          <SoftInput type="email" placeholder="Email" />
+          <SoftInput type="email" placeholder="Email" value={email}
+                       onChange={(event) => setEmail(event.target.value)} />
         </SoftBox>
         <SoftBox mb={2}>
           <SoftBox mb={1} ml={0.5}>
@@ -59,7 +77,9 @@ function SignIn() {
               Password
             </SoftTypography>
           </SoftBox>
-          <SoftInput type="password" placeholder="Password" />
+          <SoftInput type="password" placeholder="Password" 
+          value={password}
+          onChange={(event) => setPassword(event.target.value)} />
         </SoftBox>
         <SoftBox display="flex" alignItems="center">
           <Switch checked={rememberMe} onChange={handleSetRememberMe} />
@@ -73,7 +93,7 @@ function SignIn() {
           </SoftTypography>
         </SoftBox>
         <SoftBox mt={4} mb={1}>
-          <SoftButton variant="gradient" color="info" fullWidth>
+          <SoftButton variant="gradient" color="info" fullWidth onClick={handleSubmit}>
             sign in
           </SoftButton>
         </SoftBox>
@@ -92,6 +112,7 @@ function SignIn() {
             </SoftTypography>
           </SoftTypography>
         </SoftBox>
+        </form>
       </SoftBox>
     </CoverLayout>
   );

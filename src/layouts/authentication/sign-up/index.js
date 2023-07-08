@@ -35,12 +35,28 @@ import Separator from "layouts/authentication/components/Separator";
 
 // Images
 import curved6 from "assets/images/curved-images/curved14.jpg";
-
+import { useNavigate } from 'react-router-dom';
+import curved9 from "assets/images/curved-images/curved-6.jpg";
+import React from 'react';
+import axios from 'axios';
 function SignUp() {
   const [agreement, setAgremment] = useState(true);
 
   const handleSetAgremment = () => setAgremment(!agreement);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [password_confirmation, setPasswordConfirmation] = useState('');
+  const history = useNavigate();
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/api/register', { name, email, password, password_confirmation });
+      history('/authentication/sign-in');
+    } catch (error) {
+      console.error(error);
+    }}
   return (
     <BasicLayout
       title="Welcome!"
@@ -59,14 +75,22 @@ function SignUp() {
         <Separator />
         <SoftBox pt={2} pb={3} px={3}>
           <SoftBox component="form" role="form">
+          <form onSubmit={handleSubmit}>
             <SoftBox mb={2}>
-              <SoftInput placeholder="Name" />
+              <SoftInput placeholder="Name" value={name}
+                       onChange={(event) => setName(event.target.value)} />
             </SoftBox>
             <SoftBox mb={2}>
-              <SoftInput type="email" placeholder="Email" />
+              <SoftInput type="email" placeholder="Email"  value={email}
+                       onChange={(event) => setEmail(event.target.value)} />
             </SoftBox>
             <SoftBox mb={2}>
-              <SoftInput type="password" placeholder="Password" />
+              <SoftInput type="password" placeholder="Password" value={password}
+                       onChange={(event) => setPassword(event.target.value)} />
+            </SoftBox>
+            <SoftBox mb={2}>
+              <SoftInput type="password" placeholder="Password" value={password_confirmation}
+                       onChange={(event) => setPasswordConfirmation(event.target.value)} />
             </SoftBox>
             <SoftBox display="flex" alignItems="center">
               <Checkbox checked={agreement} onChange={handleSetAgremment} />
@@ -89,7 +113,7 @@ function SignUp() {
               </SoftTypography>
             </SoftBox>
             <SoftBox mt={4} mb={1}>
-              <SoftButton variant="gradient" color="dark" fullWidth>
+              <SoftButton variant="gradient" color="dark" fullWidth onClick={handleSubmit}>
                 sign up
               </SoftButton>
             </SoftBox>
@@ -107,7 +131,9 @@ function SignUp() {
                   Sign in
                 </SoftTypography>
               </SoftTypography>
+              
             </SoftBox>
+            </form>
           </SoftBox>
         </SoftBox>
       </Card>

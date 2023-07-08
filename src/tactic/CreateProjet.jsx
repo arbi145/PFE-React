@@ -6,6 +6,7 @@ import './file.css'
 // Soft UI Dashboard React examples
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import useAuth from './useAuth';
 
 const CreateProjet = () => {
       const [name, setName] = useState('');
@@ -142,6 +143,11 @@ const CreateProjet = () => {
      //   prefix: '',
       //  description: '',
       });
+      const { isUserAuthenticated, checkAuthentication } = useAuth();
+
+      if (!checkAuthentication()) {
+        return null; // Return null to prevent rendering this component
+      }
     
 
 
